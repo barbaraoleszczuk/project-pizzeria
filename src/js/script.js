@@ -89,6 +89,7 @@
       // console.log('cartButton',thisProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       // console.log('priceElem',thisProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
     initAccordion(){
       const thisProduct = this;
@@ -134,8 +135,7 @@
       const thisProduct = this;
       // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
       const formData = utils.serializeFormToObject(thisProduct.form);
-      console.log('formData', formData);
-      
+      // console.log('formData', formData);
       // set price to default price
       let price = thisProduct.data.price;
        
@@ -143,13 +143,13 @@
       for(let paramId in thisProduct.data.params) {
       // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
         const param = thisProduct.data.params[paramId];
-        console.log(paramId, param);
+        // console.log('paramId',paramId, param);
       
         // for every option in this category
         for(let optionId in param.options) {
         // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
-          console.log(optionId, option);
+          console.log('optionId',optionId, option);
 
           // check if there is param with a name of paramId in formData and if it includes optionId
           if(formData[paramId] && formData[paramId].includes(optionId)) {
@@ -157,15 +157,28 @@
             if(!option.default) {
             // add option price to price variable
               price += option.price;
+            
             }
           } 
+          
           else {
           // check if the option is default
             if(option.default) {
             // reduce price variable
               price -= option.price;
+             
             }
           }
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId); 
+          console.log('Image:', optionImage);
+          if(optionImage){
+            if(formData[paramId] && formData[paramId].includes(optionId)) {
+                optionImage.classList.add(classNames.menuProduct.imageVisible);
+              }
+            else {
+                optionImage.classList.remove(classNames.menuProduct.imageVisible);
+              }
+            }
         }
         // update calculated price in the HTML
         thisProduct.priceElem.innerHTML = price;
@@ -187,7 +200,7 @@
     },
     initData: function(){
       const thisApp = this;
-      console.log('thisApp.data:', thisApp.data);
+      // console.log('thisApp.data:', thisApp.data);
       thisApp.data = dataSource;
     }, 
   
