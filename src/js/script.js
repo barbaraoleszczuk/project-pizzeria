@@ -62,8 +62,9 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
       thisProduct.processOrder();
-      console.log('new Product:', thisProduct);
+      // console.log('new Product:', thisProduct);
     }
     renderInMenu(){
       const thisProduct = this;
@@ -90,6 +91,7 @@
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       // console.log('priceElem',thisProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
     }
     initAccordion(){
       const thisProduct = this;
@@ -149,7 +151,7 @@
         for(let optionId in param.options) {
         // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
-          console.log('optionId',optionId, option);
+          // console.log('optionId',optionId, option);
 
           // check if there is param with a name of paramId in formData and if it includes optionId
           if(formData[paramId] && formData[paramId].includes(optionId)) {
@@ -170,7 +172,7 @@
             }
           }
           const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId); 
-          console.log('Image:', optionImage);
+          // console.log('Image:', optionImage);
           if(optionImage){
             if(formData[paramId] && formData[paramId].includes(optionId)) {
                 optionImage.classList.add(classNames.menuProduct.imageVisible);
@@ -180,12 +182,76 @@
               }
             }
         }
+        // multiply price by amount
+      price *= thisProduct.amountWidget.value;
         // update calculated price in the HTML
         thisProduct.priceElem.innerHTML = price;
       }
     }
+    initAmountWidget(){
+    
+    const thisProduct = this;
+    thisProduct.amountWidget = new AmountWidget (thisProduct.amountWidgetElem);
+    thisProduct.amountWidgetElem.addEventListener ('update', function(){
+      thisProduct.processOrder();
+    });
+    }
   } 
-  
+  class AmountWidget{ 
+    constructor(element){
+    const thisWidget = this;
+
+    console.log('AmountWidget:', thisWidget);
+    console.log('constructor arguments:', element);
+
+    thisWidget.getElements(element);
+    thisWidget.setValue(settings.amountWidget.defaultValue);
+    thisWidget.initActions();
+    }
+    getElements(element){
+      const thisWidget = this;
+    
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+    
+    setValue(value){
+      const thisWidget = this;
+      const newValue = parseInt(value)//konwertuje tekst na liczbę
+
+      /* TODO: Add validation , isNan sprawdza czy dana wartość nie jest liczbą*/
+      if(thisWidget.value !== newValue && !isNaN(newValue)){
+        if (newValue > settings.amountWidget.defaultMin)
+          if (newValue < settings.amountWidget.defaultMax)
+            thisWidget.value = newValue;
+      }    
+      thisWidget.announce();
+
+      thisWidget.input.value = thisWidget.value;
+    }
+    
+
+    initActions(){
+      const thisWidget = this;
+      thisWidget.input.addEventListener('change', function(){thisWidget.setValue(thisWidget.input.value)});
+      thisWidget.linkDecrease.addEventListener('click', function(event){
+        event.preventDefault();
+        thisWidget.setValue(thisWidget.value -= 1);
+      });
+      thisWidget.linkIncrease.addEventListener('click', function(event){
+        event.preventDefault();
+        thisWidget.setValue(thisWidget.value += 1);
+      });
+    }
+    announce(){
+      const thisWidget = this;
+
+      const event = new Event('updated');
+      thisWidget.element.dispatchEvent(event);
+    }
+  }
   const app = {
     
     initMenu: function(){
@@ -206,11 +272,11 @@
   
     init: function(){
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      // console.log('*** App starting ***');
+      // console.log('thisApp:', thisApp);
+      // console.log('classNames:', classNames);
+      // console.log('settings:', settings);
+      // console.log('templates:', templates);
       thisApp.initData();
       thisApp.initMenu(); 
     }
