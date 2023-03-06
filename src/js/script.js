@@ -184,6 +184,7 @@
         }
         // multiply price by amount
       price *= thisProduct.amountWidget.value;
+
         // update calculated price in the HTML
         thisProduct.priceElem.innerHTML = price;
       }
@@ -217,19 +218,23 @@
       thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
     }
     
-    setValue(value){
+    setValue(value){ 
       const thisWidget = this;
-      const newValue = parseInt(value)//konwertuje tekst na liczbę
 
-      /* TODO: Add validation , isNan sprawdza czy dana wartość nie jest liczbą*/
+      const newValue = parseInt(value); // parseInt konwertuje zapis do danej liczby
+      console.log(newValue);
+
+      /* TODO: Add validation */
       if(thisWidget.value !== newValue && !isNaN(newValue)){
-        if (newValue > settings.amountWidget.defaultMin)
-          if (newValue < settings.amountWidget.defaultMax)
-            thisWidget.value = newValue;
-      }    
+        if (newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax)
+          thisWidget.value = newValue;
+      }  
+      
       thisWidget.announce();
 
       thisWidget.input.value = thisWidget.value;
+      console.log('setValue:', newValue);
+      
     }
     
 
@@ -238,11 +243,11 @@
       thisWidget.input.addEventListener('change', function(){thisWidget.setValue(thisWidget.input.value)});
       thisWidget.linkDecrease.addEventListener('click', function(event){
         event.preventDefault();
-        thisWidget.setValue(thisWidget.value -= 1);
+        thisWidget.setValue(thisWidget.value - 1);
       });
       thisWidget.linkIncrease.addEventListener('click', function(event){
         event.preventDefault();
-        thisWidget.setValue(thisWidget.value += 1);
+        thisWidget.setValue(thisWidget.value + 1);
       });
     }
     announce(){
@@ -283,4 +288,3 @@
   };
   app.init();
 }
-  
