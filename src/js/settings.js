@@ -85,4 +85,3 @@ export const templates = {
   cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   // CODE ADDED END
 };
-export default settings;

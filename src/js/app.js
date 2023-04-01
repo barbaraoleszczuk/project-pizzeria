@@ -62,4 +62,3 @@ const app = { //obekt tworzący instance
 };
 app.init();
 app.initCart();
-export default app;
