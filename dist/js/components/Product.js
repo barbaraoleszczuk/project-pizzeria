@@ -163,7 +163,7 @@ class Product{
         product: thisProduct.prepareCartProduct(),
       },
     });
-    thisProduct.prepareCartProduct().element.dispatchEvent(event);
+    thisProduct.element.dispatchEvent(event);
   }
   prepareCartProduct(){
     const thisProduct = this;
