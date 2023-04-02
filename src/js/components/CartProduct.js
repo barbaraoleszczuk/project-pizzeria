@@ -1,5 +1,6 @@
 import{select} from '../settings.js';
 import AmountWidget from './AmountWidget.js';
+
 class CartProduct{
   constructor(menuProduct,element){ //menuProduct- obiekt podsumowania produktu, element - referencja do utworzonego dla tego obiektu html= generatedDOM
     const thisCartProduct = this;
