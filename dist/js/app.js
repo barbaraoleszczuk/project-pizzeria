@@ -2,6 +2,7 @@ import{settings, select, classNames} from './settings.js';
 
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
+import Booking from './components/Booking.js';
 
 const app = { //obekt tworzący instancje
   
@@ -9,8 +10,32 @@ const app = { //obekt tworzący instancje
     const thisApp = this;
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
-    thisApp.activatePages(thisApp.pages[0].id);
+
+    const idFromHash = window.location.hash.replace('#/', '');
     
+    let pageMatchingHash = thisApp.pages[0].id;
+    for(let page of thisApp.pages){
+      if(page.id == idFromHash){
+        pageMatchingHash = page.id;
+        break;
+      }
+    }
+    //console.log('pageMatchingHash',pageMatchingHash);
+    thisApp.activatePages(pageMatchingHash);
+    
+    for(let link of thisApp.navLinks ){
+      link.addEventListener('click', function(event){
+        const clickedElement=this;
+        event.preventDefault();
+
+        /* get page id from href attribute */
+        const id = clickedElement.getAttribute('href').replace('#','');
+        /* run thisApp.activatePaged with that id */
+        thisApp.activatePages(id);
+        /*change URL hash */
+        window.location.hash = '#/'+ id;
+      });
+    }
   },
   activatePages: function(pageId){
     const thisApp = this;
@@ -63,19 +88,12 @@ const app = { //obekt tworzący instancje
 
     console.log('thisApp.data', JSON.stringify(thisApp.data));
   },
-    
-  
-  init: function(){
+  initBooking: function (){
     const thisApp = this;
-    // console.log('*** App starting ***');
-    // console.log('thisApp:', thisApp);
-    // console.log('classNames:', classNames);
-    // console.log('settings:', settings);
-    // console.log('templates:', templates);
-    thisApp.initPages();
-
-    thisApp.initData();
-      
+    // find container of page rezervation
+    const containerRezerv = document.querySelector(select.containerOf.booking);
+    //tworzyła nową instancję klasy Booking i przekazywała do konstruktora kontener, który przed chwilą znaleźliśmy,
+    thisApp.booking = new Booking(containerRezerv);
   },
   initCart: function(){
     const thisApp = this;
@@ -88,8 +106,20 @@ const app = { //obekt tworzący instancje
       app.cart.add(event.detail.product);
     });
   },
+  init: function(){
+    const thisApp = this;
+    // console.log('*** App starting ***');
+    // console.log('thisApp:', thisApp);
+    // console.log('classNames:', classNames);
+    // console.log('settings:', settings);
+    // console.log('templates:', templates);
+    thisApp.initPages();
+    thisApp.initCart();
+    thisApp.initData();
+    thisApp.initBooking();
+  },
 };
 app.init();
-app.initCart();
+
 
 
