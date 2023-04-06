@@ -11,7 +11,7 @@ class AmountWidget{
     thisWidget.setValue(settings.amountWidget.defaultValue);
     thisWidget.initActions();
   }
-  getElements(element){
+  getElements(element){ // Wyszukuje elementy widgetu
     const thisWidget = this;
     
     thisWidget.element = element;

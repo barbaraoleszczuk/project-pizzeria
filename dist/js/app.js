@@ -46,7 +46,7 @@ const app = { //obekt tworzący instancje
       // }else{
       //   page.classList.remove(classNames.pages.active);
       // }
-      page.classList.toggle(classNames.pages.active,page.Id==pageId);
+      page.classList.toggle(classNames.pages.active,page.id==pageId);
     } 
   
     /* add class "active" to matching links, remove from non-matching*/

@@ -11,11 +11,7 @@ class Booking{
   render(element){
     const thisBooking = this;
 
-    thisBooking.dom = {
-      wrapper: element,
-      peopleAmount: element.querySelector(select.booking.peopleAmount),
-      hoursAmount: element.querySelector(select.booking.hoursAmount),
-    };
+  
     //generate HTML
     const generatedHTML = templates.bookingWidget(); 
     thisBooking.element = utils.createDOMFromHTML(generatedHTML);
@@ -23,12 +19,19 @@ class Booking{
     const bookingContainer = document.querySelector(select.containerOf.booking);
     /*add element to booking*/
     bookingContainer.appendChild(thisBooking.element);
+  
+
+    thisBooking.dom = {
+      wrapper: element,
+      peopleAmount: element.querySelector(select.booking.peopleAmount),
+      hoursAmount: element.querySelector(select.booking.hoursAmount),
+    };
   }
   initWidgets(){
     const thisBooking = this;
     thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
     thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
-    
+
     thisBooking.dom.peopleAmount.addEventListener('updated', function () {});
     thisBooking.dom.hoursAmount.addEventListener('updated', function () {});    
   }
