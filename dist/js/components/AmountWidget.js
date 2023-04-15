@@ -1,66 +1,59 @@
 import{settings, select} from '../settings.js';
+import BaseWidget from './BaseWidget.js';
 
-class AmountWidget{ 
+class AmountWidget extends BaseWidget{ 
   constructor(element){
-    const thisWidget = this;
+    super(element, settings.amountWidget.defaultValue);
 
+    const thisWidget = this;
+    thisWidget.getElements(element);
     // console.log('AmountWidget:', thisWidget);
     // console.log('constructor arguments:', element);
 
-    thisWidget.getElements(element);
-    thisWidget.setValue(settings.amountWidget.defaultValue);
+    
     thisWidget.initActions();
   }
-  getElements(element){ // Wyszukuje elementy widgetu
+  getElements(){ // Wyszukuje elementy widgetu
     const thisWidget = this;
     
-    thisWidget.element = element;
-    thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
-    thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
-    thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    
+    thisWidget.dom.input = thisWidget.dom.wrapper.querySelector(select.widgets.amount.input);
+    thisWidget.dom.linkDecrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkDecrease);
+    thisWidget.dom.linkIncrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkIncrease);
   }
     
-  setValue(value){ 
-    const thisWidget = this;
-
-    const newValue = parseInt(value); // parseInt konwertuje zapis do danej liczby
-    // console.log(newValue);
-
-    /* TODO: Add validation */
-    if(thisWidget.value !== newValue && !isNaN(newValue)){
-      if (newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax)
-        thisWidget.value = newValue;
-    }  
-      
-    thisWidget.announce();
-
-    thisWidget.input.value = thisWidget.value;
-    // console.log('setValue:', newValue);
-      
+  
+  isValid(value){
+    return !isNaN(value) //sprawdza, czy przekazana wartość jest liczbą "is not a number"
+    && value >= settings.amountWidget.defaultMin 
+    && value <= settings.amountWidget.defaultMax;
   }
-    
-
-  initActions(){
+  renderValue(){ //metoda służy temu, aby bierząca wartość widgetu została wyświetlona na stronie
     const thisWidget = this;
-    thisWidget.input.addEventListener('change', function(){
-      thisWidget.setValue(thisWidget.input.value);
-    });
-    thisWidget.linkDecrease.addEventListener('click', function(event){
-      event.preventDefault();
-      thisWidget.setValue(thisWidget.value - 1);
-    });
-    thisWidget.linkIncrease.addEventListener('click', function(event){
-      event.preventDefault();
-      thisWidget.setValue(thisWidget.value + 1);
-    });
-    
+    thisWidget.dom.input.value = thisWidget.value;
   }
   announce(){
     const thisWidget = this;
-
-    const event = new CustomEvent('updated', {bubbles:true});
-
-    thisWidget.element.dispatchEvent(event);
+    const event = new CustomEvent('updated', {
+      bubbles: true
+    });
+    thisWidget.dom.wrapper.dispatchEvent(event);
   }
+  initActions(){
+    const thisWidget = this;
+    thisWidget.dom.input.addEventListener('change', function(){
+      thisWidget.value=thisWidget.dom.input.value;
+    });
+    thisWidget.dom.linkDecrease.addEventListener('click', function(event){
+      event.preventDefault();
+      thisWidget.setValue(thisWidget.correctValue - 1);
+    });
+    thisWidget.dom.linkIncrease.addEventListener('click', function(event){
+      event.preventDefault();
+      thisWidget.setValue(thisWidget.correctValue + 1);
+    });
+    
+  }
+  
 }
 export default AmountWidget;
