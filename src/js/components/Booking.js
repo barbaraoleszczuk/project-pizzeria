@@ -91,10 +91,48 @@ class Booking{
         ]);
       })
       .then(function([bookings, eventsCurrent, eventsRepeat]){
-        console.log('bookings', bookings);  
-        console.log('eventsCurrent', eventsCurrent);
-        console.log('eventsRepeat', eventsRepeat);
+        //console.log('bookings', bookings);  
+        //console.log('eventsCurrent', eventsCurrent);
+        //console.log('eventsRepeat', eventsRepeat);
+        thisBooking.parseData(bookings, eventsCurrent, eventsRepeat);
       });
+  }
+  parseData(bookings, eventsCurrent, eventsRepeat){
+    const thisBooking = this;
+
+    thisBooking.booked = {}; //obiekt, który będzie przechowywał informacje o zarezerwowanych stolikach
+    
+    for(let item of bookings){ //zmienna item o właściwościach: data, godzina, dł. rezerwacji, nr stolika
+      thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
+    }
+    for(let item of eventsCurrent){
+      thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
+    }
+    for(let item of eventsRepeat){
+      if(item.repeat == 'daily'){
+        for(let loopDate = minDate; loopDate <= maxDate; loopDate = utils.addDays(loopDate, 1)){
+          thisBooking.makeBooked(utils.dateToStr(loopDate), item.hour, item.duration, item.table);
+        }
+      }
+    console.log('thisBooking.booked',thisBooking.booked );
+    }
+  }
+  makeBooked(date, hour, duration,table){
+    const thisBooking = this;
+
+    if( typeof thisBooking.booked[date] == 'undefined'){ //jesli nie ma danej daty w obiekcie, tworzymy nowy obiekt z tą właśnie datą
+      thisBooking.booked[date] = {};
+    }
+    const startHour = utils.hourToNumber(hour);
+
+    for(let hourBlock = startHour; hourBlock < startHour + duration; hourBlock += 0.5){
+
+      if(typeof thisBooking.booked[date][hourBlock] == 'undefined'){
+        thisBooking.booked[date][hourBlock] = [];
+      }
+
+    thisBooking.booked[date][hourBlock].push(table);// dodanie zarezerwowanego stolika do tablicy z rezerwacjami
+    }
   }
 }
 
