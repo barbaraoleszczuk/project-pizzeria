@@ -77,7 +77,7 @@ const app = { //obekt tworzący instancje
         return rawResponse.json();
       })
       .then(function(parsedResponse){
-        console.log('parsedResponse', parsedResponse);
+        //console.log('parsedResponse', parsedResponse);
 
         // save response as this.App.data.products
         thisApp.data.products = parsedResponse;
@@ -86,7 +86,7 @@ const app = { //obekt tworzący instancje
         thisApp.initMenu();
       });
 
-    console.log('thisApp.data', JSON.stringify(thisApp.data));
+    //console.log('thisApp.data', JSON.stringify(thisApp.data));
   },
   initBooking: function (){
     const thisApp = this;
