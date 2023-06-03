@@ -10,7 +10,8 @@ class Booking{
     thisBooking.initWidgets();
     thisBooking.getData();
     thisBooking.initTables();
-
+    thisBooking.selectedTable = null;
+    thisBooking.starters = [];
   }
   render(element){ //widget Container
     const thisBooking = this;
@@ -37,7 +38,7 @@ class Booking{
       phone: element.querySelector(select.booking.phone),
       address : element.querySelector(select.booking.address),
       submit : element.querySelector(select.booking.submit),
-      starters : element.querySelectorAll(select.booking.starters),
+      starters : document.querySelector(select.booking.starters),
     };
   }
   sendBooking(){
@@ -56,12 +57,19 @@ class Booking{
       adress: thisBooking.dom.address.value,
     };
 
-    for(let starter of thisBooking.dom.starters) {
-      if(starter.checked){
-        payload.starters.push(starter.value);
+    
+    thisBooking.dom.starters.addEventListener('click', function(event){
+      if(event.target.tagName == 'INPUT' && event.target.type == 'checkbox' && event.target.name == 'starter'){
+        if(event.target.checked == true){
+          thisBooking.starters.push(event.target.value);
+        } else {
+          const arrayStarterNumber = thisBooking.starters.indexOf(event.target.value);
+          thisBooking.starters.splice(arrayStarterNumber, 1);
+        }
       }
-    }
-
+      
+    });
+    thisBooking.makeBooked(payload.date, payload.hour, payload.duration, payload.table);
     const options = {
       method: 'POST',
       headers: {
@@ -69,7 +77,6 @@ class Booking{
       },
       body: JSON.stringify(payload),
     };
-      
     fetch(url, options)
       .then(function(response) {
         return response.json();

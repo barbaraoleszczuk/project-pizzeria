@@ -48,7 +48,7 @@ export const select = {
     button: '.order-confirmation [type="submit"]',
     phone: '.order-confirmation [type="tel"]',
     address: '.order-confirmation [type="text"]',
-    starters: 'input[type="checkbox"]',
+    starters: '.starter',
   },
   nav: {
     links: '.main-nav a',
