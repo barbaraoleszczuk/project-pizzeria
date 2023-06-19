@@ -265,13 +265,13 @@
   ],
   "bookings": [
     {
-      "date": "2023-06-03",
-      "hour": "19:00",
-      "duration": 3,
-      "ppl": 3,
+      "date": "2023-06-19",
+      "hour": "18:00",
+      "duration": 2,
+      "ppl": 2,
       "starters": [],
-      "phone": "567890",
-      "adress": "ghj",
+      "phone": "",
+      "adress": "",
       "id": 1
     }
   ]

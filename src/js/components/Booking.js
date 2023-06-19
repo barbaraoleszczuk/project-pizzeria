@@ -103,6 +103,8 @@ class Booking{
       thisBooking.updateDOM();
     });
     thisBooking.dom.floorPlan.addEventListener('click', function(event){thisBooking.initTables(event);
+      event.preventDefault();
+      
     });
     thisBooking.dom.orderButton.addEventListener('click', function(event){
       event.preventDefault();
@@ -121,41 +123,38 @@ class Booking{
       console.log('starters: ', thisBooking.starters);
     });
   }
-  initTables(){
+  initTables(event){
     //Właściwość target zwraca obiekt będący celem zdarzenia dla danego zdarzenia.
     // Jeśli zdarzenie nie zostało wysłane zwracana będzie wartość null. Właściwość jest tylko do odczytu.
     const thisBooking = this;
-
-    thisBooking.element.addEventListener('click', function(event){
-      event.preventDefault();
     
-      //Czy kliknięto na stolik?
-      if (event.target.classList.contains('table')){
-      //Czy stolik jest wolny?
-        if(!event.target.classList.contains('booked')){
-          for(let table of thisBooking.dom.tables){
-            if (table.classList.contains('selected') && //jeśli wśród stolików, któryś ma klasę 'selected' a nie jest tym 'klikniętym', to zabierz tę klasę
-            table !== event.target){
-              table.classList.remove('selected');
-            }
-            //dodaj klasę selected
+    //Czy kliknięto na stolik?
+    if (event.target.classList.contains('table')){
+    //Czy stolik jest wolny?
+      if(!event.target.classList.contains('booked')){
+        for(let table of thisBooking.dom.tables){
+          if (table.classList.contains('selected') && //jeśli wśród stolików, któryś ma klasę 'selected' a nie jest tym 'klikniętym', to zabierz tę klasę
+          table !== event.target){
+            table.classList.remove('selected');
+          }
+          //dodaj klasę selected
 
-            if(event.target.classList.contains('selected')){
-              event.target.classList.remove('selected');
-            }
-            else {
-              event.target.classList.add(classNames.booking.tableSelected);
-            }
+          if(event.target.classList.contains('selected')){
+            event.target.classList.remove('selected');
+          }
+          else {
+            event.target.classList.add(classNames.booking.tableSelected);
           }
         }
-        //Przypisz nr stolika do właściwości w konstruktorze
-        //Jeśli nie, wyświetl alert
-        else {
-          alert('this table is already booked');
-        } 
-        console.log(event.target);
       }
-    });
+      //Przypisz nr stolika do właściwości w konstruktorze
+      //Jeśli nie, wyświetl alert
+      else {
+        alert('this table is already booked');
+      } 
+      console.log(event.target);
+    }
+    
   }
   getData(){
     const thisBooking = this;
