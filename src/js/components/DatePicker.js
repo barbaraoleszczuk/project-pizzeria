@@ -16,8 +16,15 @@ class DatePicker extends BaseWidget{
     thisWidget.minDate = new Date();
     thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
     // eslint-disable-next-line no-undef
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+
+    const formattedDate = year + '-' + month + '-'+ day;   
+    console.log(formattedDate);
     flatpickr(thisWidget.dom.input, {
-      defaultDate: thisWidget.minDate,
+      defaultDate: '2023-06-19',
       minDate: thisWidget.minDate,
       maxDate: thisWidget.maxDate,
       locale: {

@@ -9,7 +9,6 @@ class Booking{
     thisBooking.render(element);
     thisBooking.initWidgets();
     thisBooking.getData();
-    thisBooking.initTables();
     thisBooking.selectedTable = null;
     thisBooking.starters = [];
   }
@@ -102,10 +101,11 @@ class Booking{
     thisBooking.dom.wrapper.addEventListener('updated', function(){
       thisBooking.updateDOM();
     });
-    thisBooking.dom.floorPlan.addEventListener('click', function(event){thisBooking.initTables(event);
+    thisBooking.dom.floorPlan.addEventListener('click', function(event){
+      thisBooking.initTables(event);
       event.preventDefault();
-      
     });
+
     thisBooking.dom.orderButton.addEventListener('click', function(event){
       event.preventDefault();
       thisBooking.sendBooking();
@@ -123,7 +123,8 @@ class Booking{
       console.log('starters: ', thisBooking.starters);
     });
   }
-  initTables(event){
+    initTables(event){
+    console.log(event)
     //Właściwość target zwraca obiekt będący celem zdarzenia dla danego zdarzenia.
     // Jeśli zdarzenie nie zostało wysłane zwracana będzie wartość null. Właściwość jest tylko do odczytu.
     const thisBooking = this;
